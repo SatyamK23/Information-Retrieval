@@ -50,7 +50,7 @@ class Stemmer(object):
             return word[:len(word)- len(suffix)] + rep
         return word
 
-#Function for Replacing rep with given suffix
+#Function for Replacing rep with given suffix and is for any value of m.
     def replace_end(self, suffix, rep, condition = True):
 # variable for checking whether the condition which is applicable for that word or not        
         applied = False
@@ -60,7 +60,7 @@ class Stemmer(object):
         return applied
 
 #Creating a Dictionary or Associative array for Step 2, 3 and 4.
-#First character is the penultimate character which to be replaced by the following suffix
+#Penultimate character containing the following character is replaced by other characters.
     step2_dict = {'a':(('ational','ate'),('tional','tion')),
                'c':(('enci', 'ence'), ('anci', 'ance')),
                'e':(('izer', 'ize')),
@@ -113,6 +113,7 @@ class Stemmer(object):
                 longest_match = (suffix, rep)
         return longest_match
 
+#This function  is to be used where the value of measure or m is 1
     def replace_ends_if(self, suffix_tbl, cond = True, m_thresh = 1):
         if not cond:
             return self.stemmed
@@ -123,7 +124,7 @@ class Stemmer(object):
         return self.stemmed
 
     def v_in_stem(self, word, suffix = '', rep = ''):
-        """Whether or not word contains a vowel."""
+        #Whether or not word contains a vowel
         return self.contains_v(self.rep_end(word, suffix, rep))
 
     def stem_ends_with_dbl_cons(self):
@@ -219,9 +220,9 @@ class Stemmer(object):
                 return self.stemmed
 
 if __name__ == '__main__':
-    import sys
 
     def main():
+        stemmer = Stemmer()
 #-----------Converting Text file into Lower case-------------------------------       
 #        with open('Unspeakable-Perk.txt', 'a+') as fileinput:
 #           for line in fileinput:
@@ -233,20 +234,23 @@ if __name__ == '__main__':
 
 #------------Tokenize the file-------------------------------------------------
         with open ('Unspeakable-Perk.txt','r') as fin:
-#            stopset = set(stopwords.words('english'))
-          for line in fin:
-#             if not fin in stopset:
+            stopset = set(stopwords.words('english'))
+            print ("\n".join(stopset))
+            for line in fin:
+              if  fin not in stopset:
                   tokens = word_tokenize(line)
-                  print("\n".join(tokens))
-                  appendFile=open('Unspeakable-Perk.txt','a')
-                  #appendFile.write(""+ )
+                  cleaned_text = [w for w in tokens if not w in stopset]
+                  cleaned_text = []
+#                  print("\n".join(tokens))
+                  outputFile=open('Output.txt','a+')
+                  outputFile.write("\n".join(tokens))
+                  outputFile.write("\n".join(cleaned_text))
         fin.close()
 #--------Applying Porter Stemmer on given tokenize file------------------------
-        stemmer = Stemmer()
-        if len(sys.argv) > 1:
+        if len(sys.argv) > 1: 
              output = []
              for file_ in sys.argv[1:]:
-                 for line in file('Unspeakable-Perk.txt', 'r'):
+                 for line in file('file_', 'r'):
                      output += [stemmer.stem(word) for word in line.split()]
                      print "**************************************************"
                      print "\n".join(output)
